@@ -65,9 +65,6 @@ jobs:
       - lint
       - test
 
-    outputs:
-      image: ${{ steps.image.outputs.image }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -123,5 +120,5 @@ jobs:
       - name: Deploy frontend
         working-directory: starter/frontend/k8s
         run: |
-          kustomize edit set image frontend=${{ needs.build.outputs.image }}
+          kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${GITHUB_SHA}
           kustomize build . | kubectl apply -f -
